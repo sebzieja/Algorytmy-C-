@@ -66,9 +66,11 @@ void graph::printRoute(const string& name){
         cout << ve->parent->name << " ";
         ve = ve->parent;
     }
+    cout<<endl;
 }
 
 void graph::bfs(const string &name){
+    for(auto it = work.cbegin(); it != work.cend(); ++it) it->second->color=0;
     vertex *ve = (work.find(name)->second);
     vertex *ve2;
     queue<vertex*> Q;
