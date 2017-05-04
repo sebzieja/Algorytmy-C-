@@ -36,6 +36,7 @@ void graph::addvertex(const string &name)
         return;
     }
     cout << "\nVertex already exists!";
+    //test//
 }
 
 void graph::addedge(const string& from, const string& to, double cost)
