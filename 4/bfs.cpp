@@ -12,6 +12,8 @@ struct vertex{
     vector<ve> adj;
     vertex* parent=NULL;
     int color = 0;
+    int time = 0;
+    int visited=0;
     double distance;
     string name;
     vertex(string s) : name(s){}
@@ -24,9 +26,12 @@ public:
     vmap work;
     void addvertex(const string &name);
     void addedge(const string& from, const string& to, double cost);
+    void addedge(const string& from, const string& to);
     void printGraph();
     void bfs(const string &name);
     void printRoute(const string& name);
+    void dfsVisit(vertex* ve);
+    void dfs();
 };
 
 void graph::addvertex(const string &name)
@@ -48,7 +53,15 @@ void graph::addedge(const string& from, const string& to, double cost)
     vertex *f = (work.find(from)->second);
     vertex *t = (work.find(to)->second);
     pair<int, vertex *> edge = make_pair(cost, t);
-    pair<int, vertex *> edge2 = make_pair(cost, f);
+    f->adj.push_back(edge);
+}
+
+void graph::addedge(const string& from, const string& to)
+{
+    vertex *f = (work.find(from)->second);
+    vertex *t = (work.find(to)->second);
+    pair<int, vertex *> edge = make_pair(1, t);
+    pair<int, vertex *> edge2 = make_pair(1, f);
     f->adj.push_back(edge);
     t->adj.push_back(edge2);
 }
@@ -95,38 +108,43 @@ void graph::bfs(const string &name){
 
 }
 
+void graph::dfs(){
+	for(auto it = work.cbegin(); it != work.cend(); ++it) it->second->color=0;
+	for(auto it = work.cbegin(); it != work.cend(); ++it){
+		//cout<<"dfs dla "<<it->second->name<<endl;
+		if (it->second->color==0){;
+			dfsVisit(it->second);
+		}
+	}
+}
+void graph::dfsVisit(vertex *ve){
+	ve->color=1;
+	for(auto i: ve->adj){
+		if(i.second->color==1) cout<<"Jest cykl\n";
+		if(i.second->color==0) dfsVisit(i.second);	
+	}
+	ve->color=2;
+}
 
 
 int main(){
-	/*
-	int n,m,v1,v2;
-	cin >> n;
-	cin >> m;
-	
-	Graph mojGraf(n, m);
-	
-	for(int i=0; i<m; i++){
-		cin >> v1 >> v2;
-		mojGraf.Insert(v1,v2);
-	}
-	mojGraf.Colorize();
-	mojGraf.printGraph();*/
     graph test1;
-    test1.addvertex("1");
-    test1.addvertex("2");
-    test1.addvertex("3");
-    test1.addvertex("4");
-    test1.addvertex("5");
-    test1.addvertex("6");
-    test1.addedge("1", "2", 1);
-    test1.addedge("1", "6", 1);
-    test1.addedge("5", "6", 1);
-    test1.addedge("2", "5", 1);
-    test1.addedge("2", "3", 1);
-    test1.addedge("3", "4", 1);
+    int ve, ed, length;
+    string v1, v2;
+    cin>>ve>>ed;
+    for(int i=1;i<=ve;i++){
+    	test1.addvertex(to_string(i));
+    }
+    for(int i=0;i<ed;i++){
+    	cin>>v1>>v2>>length;
+    	test1.addedge(v1,v2, length);
+    }
     test1.printGraph();
-    test1.bfs("1");
-    cout<<"Najkrotsza droga z 4 do 1 to: "<<endl;
-    test1.printRoute("4");
+    //test1.bfs("1");
+    //cout<<"Najkrotsza droga z 4 do 1 to: "<<endl;
+    //test1.printRoute("3");
+    test1.dfs();
+
+
 	return 0;
 }
