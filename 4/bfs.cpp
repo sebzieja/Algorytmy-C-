@@ -4,8 +4,10 @@
 #include <map>
 #include <string>
 #include <queue>
+#include <sstream>
 
 using namespace std;
+
 
 struct vertex{
     typedef pair<int, vertex*> ve;
@@ -119,10 +121,24 @@ void graph::dfs(){
 }
 void graph::dfsVisit(vertex *ve){
 	ve->color=1;
+    vertex* ve2;
+    ve2=ve;
 	for(auto i: ve->adj){
-		if(i.second->color==1) cout<<"Jest cykl\n";
-		if(i.second->color==0) dfsVisit(i.second);	
-	}
+		if(i.second->color==0){
+            i.second->parent=ve;
+            //cout<<"Ustawia "<<i.second->name<<" "<<i.second->parent->name<<endl;
+            dfsVisit(i.second);	
+	    }
+        if(i.second->color==1){
+            cout<<"Jest cykl\n";
+            cout<<i.second->name<<" "<<ve->name<<" ";
+            while(ve2->parent!=i.second){
+                cout << ve2->parent->name << " ";
+                ve2 = ve2->parent;
+            }
+        cout<<endl;
+        }
+    }
 	ve->color=2;
 }
 
