@@ -5,6 +5,7 @@
 #include <string>
 #include <queue>
 #include <sstream>
+#include <random>
 
 using namespace std;
 
@@ -159,10 +160,38 @@ void graph::printTopoSort(){
 	cout<<endl;
 }
 
+void makeMatrix(int v, graph* Graf, int p){
+    for(int i=1;i<=v;i++){
+    	Graf->addvertex(to_string(i));
+    }
+    int temp;
+    int matrix[v][v];
+    for(int i=0;i<v;i++){
+        for(int j=0;j<v;j++){
+            matrix[i][j]=0;
+        }
+    }
+    for(int i=0;i<v;i++){
+        for(int j=0;j<=i-1;j++){
+            if(rand()%100<=p){
+                matrix[i][j]=1;
+                Graf->addedge(to_string(i+1),to_string(j+1),1);
+            }
+        }
+    }
+    for(int i=0;i<v;i++){
+        for(int j=0;j<v;j++){
+            cout<<matrix[i][j]<<" ";
+        }
+        cout<<endl;
+    }
+
+}
+
 
 int main(){
     graph test1;
-    int ve, ed, length;
+    /*int ve, ed, length;
     string v1, v2;
     cin>>ve>>ed;
     for(int i=1;i<=ve;i++){
@@ -178,6 +207,10 @@ int main(){
     //test1.printRoute("3");
     test1.dfs();
 
+    test1.printTopoSort();*/
+    makeMatrix(6, &test1, 70);
+    test1.dfs();
+    test1.printGraph();
     test1.printTopoSort();
 
 
