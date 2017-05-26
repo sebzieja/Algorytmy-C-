@@ -24,6 +24,8 @@ struct vertex{
 class graph
 {
 public:
+	int time=0;
+	map<int, vertex*, std::greater<int>> topoSort;
     typedef map<string, vertex *> vmap;
     vmap work;
     void addvertex(const string &name);
@@ -34,6 +36,7 @@ public:
     void printRoute(const string& name);
     void dfsVisit(vertex* ve);
     void dfs();
+    void printTopoSort();
 };
 
 void graph::addvertex(const string &name)
@@ -112,6 +115,7 @@ void graph::bfs(const string &name){
 
 void graph::dfs(){
 	for(auto it = work.cbegin(); it != work.cend(); ++it) it->second->color=0;
+	time=0;
 	for(auto it = work.cbegin(); it != work.cend(); ++it){
 		//cout<<"dfs dla "<<it->second->name<<endl;
 		if (it->second->color==0){;
@@ -120,6 +124,8 @@ void graph::dfs(){
 	}
 }
 void graph::dfsVisit(vertex *ve){
+	++time;
+	ve->time=time;
 	ve->color=1;
     vertex* ve2;
     ve2=ve;
@@ -140,6 +146,17 @@ void graph::dfsVisit(vertex *ve){
         }
     }
 	ve->color=2;
+	++time;
+	ve->time=time;
+	//cout<<ve->name<<" ";
+	topoSort[ve->time]=ve;
+}
+
+void graph::printTopoSort(){
+	for(auto elem : topoSort){
+		cout << elem.second->name << " "<< "\n";
+	}
+	cout<<endl;
 }
 
 
@@ -160,6 +177,8 @@ int main(){
     //cout<<"Najkrotsza droga z 4 do 1 to: "<<endl;
     //test1.printRoute("3");
     test1.dfs();
+
+    test1.printTopoSort();
 
 
 	return 0;
